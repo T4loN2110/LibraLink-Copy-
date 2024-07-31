@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+        <%include ./include/nav %>
+        
+
+      <div class="container">
+            <div class="row">
+            <% include ./include/sidemenu_librarian %>
+            <div class="col-8 col-lg-8" >
+              <div class="row" style="padding-top: 5%;">
+                <div class="col-10">
+                  <div class="title text personaltitle margin-left:5%">User Requests & Activities</div>
+                </div>
+              </div>        
+              <div class="row" style="padding-top: 5%;">
+                <form class="d-flex" name="searchRequestForm" action="/borrow/allRequest/<%=current%>"  method="post">
+                  <div class="col-4"style="padding-right:3%">     
+                    <label for="requestType">Type of request</label>
+                    <select class="form-select" id="requestType" name="requestType" style="color: black; font-size: 20px;">
+                      <%if(requestType==-2){%>
+                        <option selected value="-2">All</option>
+                        <%}else{%>
+                          <option value="-2">All</option>
+                        <%}%>
+                      <% const typeList=["Borrow","Extend","Return"] %>
+                      <% typeList.forEach(function(type,idx){%>
+                        <%if(idx==requestType){%>
+                          <option value="<%=idx%>" selected><%=type%></option>
+                        <%}else{%>
+                          <option value="<%=idx%>"><%=type%></option>
+                        <%}%>
+                      <%})%>
+                    </select>
+                  </div>
+                  <div class="col-4" style="padding-left:3%">
+                    <label for="requestStatus">Status of request</label>
+                    <select class="form-select" id="requestStatus" name="requestStatus" style="color: black; font-size: 20px;">
+                        <%if(requestStatus==-2){%>
+                          <option selected value="-2">All</option>
+                          <%}else{%>
+                            <option value="-2">All</option>
+                          <%}%>
+                        <% const statusList=["Cancelled","Pending","Borrowed","Returned","Overdue"] %>
+                        <% statusList.forEach(function(status,idx){%>
+                          <%if(idx-1==requestStatus){%>
+                            <option value="<%=idx-1%>" selected><%=status%></option>
+                          <%}else{%>
+                            <option value="<%=idx-1%>"><%=status%></option>
+                          <%}%>
+                        <%})%>
+                    </select>
+                  </div>
+                  <div class="col-2" style="margin-left: 25%; padding-top: 3%;" >
+                    <button class="btn btn-primary" type="submit">Find</button>
+                </div>
+                </form>
+              </div>
+              <div class="row" style="padding: 5% 0% 0% 3%;">
+                <% if(!request.length){%>
+                  <p class="text text-warning">There is no request</p>
+                  <%}else{%>
+                  <p>Click on the link for more info of the request detail</p>
+                  <table class="table table-responsive align-middle table-bordered border border-black" style=" padding-left: 15px;" id="bruh">
+                    <thead class="table-primary  border border-black" style="text-align:center;">
+                      <tr>
+                            <th>No.</th>
+                            <th>Book</th>
+                            <th>Username</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Expected Pickup Date</th>
+                            <th>Returned Date</th>
+                            <th>Deadline</th>
+                            <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <% if(request.length){%>
+                          <% var count=1 %>
+                          <% for(var i = 0; i< request.length; i++) {%>    
+                      <tr data-bs-target="#requestDetail" data-bs-toggle="modal" data-id="<%=request[i]._id%>">
+                            <td style="text-align: center;"><%=count++%></td>
+                            <td><a href="/borrow?id=<%=request[i].ma_sach%>"><%=request[i].ten_sach%></a></td>
+                            <td><%=request[i].nguoi_dat%></td>
+                            <td>
+                            <%if(request[i].loai_don==1) { %>
+                              Extend
+                            <%}else if(request[i].loai_don==0){%>
+                              Borrow
+                            <%}else if(request[i].loai_don==2){%>
+                              Return
+                            <%}%>
+                          </td>
+                          <td>
+                            <%if(request[i].trang_thai==3) { %>
+                             <span class="bg-danger text-light" style="padding:5px; border-radius: 7px;">Overdue</span> 
+                            <%}else if(request[i].trang_thai==2) { %>
+                              <span class="bg-success text-light" style="padding:5px; border-radius: 7px;">Received</span> 
+                            <%}else if(request[i].trang_thai==-1){%>
+                              <span class="bg-secondary text-light" style="padding:5px; border-radius: 7px;">Cancelled</span> 
+                            <%}else if(request[i].trang_thai==0||request[i].loai_don==1){%>
+                              <span class="bg-warning text-light" style="padding:5px; border-radius: 7px;">Await confirm</span> 
+                            <%}else if(request[i].trang_thai==1){%>
+                              <span class="bg-info text-light" style="padding:5px; border-radius: 7px;">Await return</span> 
+                            <%}%>
+                          </td>
+                          <% var date1=new Date(request[i].ngay_gui)%>
+                          <% var str1=date1.getDate()+'/'+date1.getMonth()+'/'+date1.getFullYear()%>
+                          <td><a tabindex="0" href="#" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-title="Expected Pickup Date" data-bs-content="<%=date1%>"><%=str1%></a></td>
+                          <td>
+                          <%if(request[i].ngay_tra){%>
+                            <% var date2=new Date(request[i].ngay_tra)%>
+                          <% var str2=date2.getDate()+'/'+date2.getMonth()+'/'+date2.getFullYear()%>
+                          <a tabindex="0" href="#" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-title="Return Date" data-bs-content="<%=date2%>"><%=str2%></a>
+                            <%}else{%>
+                              N/A
+                              <%}%>
+                          </td>
+                          <td>
+                            <%if(request[i].han_tra){%>
+                              <% var date3=new Date(request[i].han_tra)%>
+                            <% var str3=date3.getDate()+'/'+date3.getMonth()+'/'+date3.getFullYear()%>
+                            <a tabindex="0" href="#" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-title="Deadline" data-bs-content="<%=date3%>"><%=str3%></a>
+                              <%}else{%>
+                                N/A
+                                <%}%>
+                            </td>
+                            <td><div style="display: flex; align-items: center; justify-content: center; gap: 10;">
+                            <%if(request[i].trang_thai==0||request[i].trang_thai==1){%>
+                              <% if(request[i].loai_don!=2){%> 
+                                  <%if(request[i].loai_don==1){%>
+                                    <a href="/borrow/confirm_extend?id=<%=request[i]._id%>"class="btn btn-primary" style="margin-left: 5px;">Confirm</a>
+                                    <a href="/borrow/reject_extend?id=<%=request[i]._id%>"class="btn btn-primary" style="margin-left: 5px;">Cancel</a>
+                                  <%}else{%>
+                                  <a style="margin-left: 5px;" href="/borrow/confirm?id=<%=request[i]._id%>"class="btn btn-primary">Confirm</a>
+                                  <a style="margin-left: 5px;" href="/borrow/reject?id=<%=request[i]._id%>"class="btn btn-primary">Cancel</a>
+                                  <%}%>
+                              <%}else if(request[i].loai_don==2){%>
+                                <a href="/borrow/confirm_return?id=<%=request[i]._id%>"class="btn btn-primary" style="margin-left: 5px;">Confirm return</a>
+                              <%}%>
+                            <%}else if(request[i].trang_thai==2||request[i].trang_thai==-1||request[i].trang_thai==3){%>
+                                <% if(request[i].loai_don!=2){%> 
+                                  <a class="btn btn-primary disabled" style="margin-left: 5px;">Confirm</a>
+                                  <a class="btn btn-primary disabled" style="margin-left: 5px;">Cancel</a>
+                              <%}else if(request[i].loai_don==2){%>
+                                <a class="btn btn-primary disabled" style="margin-left: 5px;">Confirm Return</a>
+                              <%}%>
+                            <%}%>
+                          </div></td>
+                      </tr>
+                          <%}%>
+                        <%}%>
+                      </tbody>
+                    </table> 
+                  <%}%>   
+                </div>
+                <div class="row" >
+                  <% if(pages > 0) { %>
+                      <nav class="mx-auto" style="align-items: center;">
+                        <ul class="pagination" style="margin-top: 2rem;padding-left: 40%;">
+                        
+                          <!-- FIRST ITEM -->  
+                          <% if(current == 1) { %> 
+      
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">First</a>
+                              </li>
+                          <% } else { %>
+      
+                              <li class="page-item">
+                                <a class="page-link" href="../1">First</a>
+                              </li>
+                          <% } %>
+                          
+                          <!-- ITEMS  -->
+                          <% var i = (Number(current) > 3 ? Number(current) - 2 : 1) %> 
+      
+                          <% if(i !== 1) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">...</a>
+                              </li>
+                          <% } %>
+                          <% for(; i <= (Number(current) + 2) && i <= pages; i++) { %>
+                          
+                            <% if(i == current) { %>
+                              <li class="page-item active">
+                                <% var link="../"+i%>
+                                <a class="page-link" href=<%=link%>>
+                                  <%= i %>
+                                </a>
+                              </li>
+                          <% } else { %>
+                              <li class="page-item">
+                                <% var link="../"+i%>
+                                <a class="page-link" href=<%=link%>>
+                                  <%= i %>
+                                </a>
+                              </li>
+                          <% } %>
+                          <% if (i == Number(current) + 2 && i < pages) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">...</a>
+                              </li>
+                          <% } %>
+                          <% } %>
+                          
+                          <!-- LAST ITEM -->
+                          <% if(current == pages) { %> 
+      
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">
+                                  Last
+                                </a>
+                              </li>
+                          <% } else { %>
+                          
+                              <li class="page-item">
+                                <% var link='./'+pages%>
+                                <a class="page-link" href=<%=link%>>
+                                  Last
+                                </a>
+                              </li>
+                          <% } %>
+                        </ul>
+                      </nav>
+                      <% } %>
+              </div>
+            </div>
+          </div>
+          </div>
+        <p>&nbsp;</p> 
+        
+            <!-- hiển thị phân trang nếu có trang -->
+            
+      </div>
+    </div>
+  </div>
+        <%include ./include/footer %>
+        <%include ./include/scripts %>
+    </body>
+    <script>
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    </script>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+      <%if(errMes.length>0){%>
+        <h2 class="text text-warning"><%=errMes%>></h2>
+        <%}%>
+        <form class="modal fade" id = "createBook" tabindex="-1" role="dialog" aria-labelledby="borrowBook" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" enctype="multipart/form-data" method="post" action="/book/create">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 w-100 text-center">Heh</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-outline mb-4">
+                        <input type="text" name="ten_sach" class="form-control form-control-lg" placeholder="Ten" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="number" name="nam_xb_sach" class="form-control form-control-lg" placeholder="Nam xuat ban" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="text" name="tac_gia_sach" class="form-control form-control-lg" placeholder="Tac gia" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label for="tom_tat_sach" class="form-label">Tóm tắt</label>
+                        <textarea name="tom_tat_sach" class="form-control form-control-lg"></textarea>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="number" name="gia_bia_sach" class="form-control form-control-lg" placeholder="Gia bia" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="file" name="anh_bia_sach" accept="image/*" required class="form-control form-control-lg" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label for="ma_co_so_sach">Base department to store books</label>
+                        <select name="ma_co_so_sach" class="form-control form-control-lg">
+                          <option selected disabled>Department</option>
+                          <% departments.forEach(function(dep){%>
+                            <option value="<%=dep._id%>"><%=dep.dia_chi%></option>
+                            <%})%>
+                        </select>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input type="number" name="so_luong_sach" class="form-control form-control-lg" placeholder="So luong sach trong co so tren" />
+                      </div>
+                </div>
+                <div class="modal-footer">
+                  <div style="margin-top: 10%;">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </form>
+        <button class="btn btn-primary"data-bs-toggle="modal" data-bs-target="#createBook">Meh</button>
+        <button class="btn btn-primary">Ugh</button>
+        <h1>Uploaded Images</h1>
+    <div>
+      <% books.forEach(function(book) { %>
+      <div>
+        <div>
+          <img
+            src="data:image/<%=book.anh_bia.contentType%>;base64,
+                    <%=book.anh_bia.data.toString('base64')%>"
+          />
+          <div>
+            <h5><%= book.ten %></h5>
+
+            <p><%= book.nam_xb %></p>
+            <p><%= book.tac_gia %></p>
+            <p><%= book.tom_tat %></p>
+            <p><%= book.gia_bia %></p>
+            <p><%= book.co_so.ma_co_so %></p>
+            <p><%= book.co_so.so_luong %></p>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+        <% include ./include/scripts %>
+    </body>
+</html>

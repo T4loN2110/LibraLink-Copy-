@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+    
+    <% include ./include/nav %> 
+        <div class="container">
+            <div class="row">
+                <% include ./include/sidemenu_admin %>
+                <div class="col-10 col-lg-9">
+                    <div class="row" style="padding-top: 3%; padding-bottom: 3%">
+                        <div class="col-5">
+                            <h1 style="padding-left: 3%;">Add & Edit User</h1>
+                        </div>
+
+                        <div class="col-4"></div>
+
+                        <!-- <div class="col-3" style="text-align: right;">
+                            <button class="btn btn-primary" type="submit" onclick="saveAddUser('save')">Save</button>
+                            <button class="btn btn-primary" type="submit" onclick="saveAddUser('add')">Add New</button>
+                        </div> -->
+                    </div>
+                    
+                    <div class="horizontal_line"></div>
+                    
+                    <div class="text personaltext" style="padding-left: 5%; padding-top: 3%;">   
+                        <div class="row">
+                            <div class="col-2">
+                                <label style="float: left;">Role</label>
+                                <label style="float: left; color: red;">*</label>
+                            </div>
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;">
+                                <select class="form-select" id="role" name="role" style="color: black; font-size: 20px;">
+                                    <option value="">Select role</option>
+                                    <option value=1 <%if (userInput.role==1) {%>selected<%}%> >Member</option>
+                                    <option value=2 <%if (userInput.role==2) {%>selected<%}%> >Librarian</option>
+                                    <option value=3 <%if (userInput.role==3) {%>selected<%}%> >Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label style="float: left;">Username</label>
+                                <label style="float: left; color: red;">*</label>
+                            </div>            
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;">
+                                <input class="form-control" id="username" name="isbn" value=<%=userInput.username%> >                         
+                            </div>     
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label style="float: left;">Password</label>
+                                <label style="float: left; color: red;">*</label>
+                            </div>                         
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;"> 
+                                <input class="form-control" id="password" name="title" value=<%=userInput.password%> >
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-2">
+                                <label style="float: left;">Full Name</label>
+                                <label style="float: left; color: red;">*</label>
+                            </div>                         
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;"> 
+                                <input class="form-control" id="full_name" name="year" value=<%=userInput.name%> >
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-2">
+                                Gender
+                            </div>
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;">
+                                <select class="form-select" id="gender" name="gender" style="color: black; font-size: 20px;">
+                                    <option value="">Select gender</option>
+                                    <option <%if (userInput.gender=='Male') {%>selected<%}%> >Male</option>
+                                    <option <%if (userInput.gender=='Female') {%>selected<%}%> >Female</option>
+                                    <option <%if (userInput.gender=='None') {%>selected<%}%> >None</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                Email
+                            </div>                         
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;"> 
+                                <input class="form-control" id="email" name="email" value=<%=userInput.email%> >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                Phone
+                            </div>                         
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;"> 
+                                <input class="form-control" id="phone" name="phone" value=<%=userInput.phone%> >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                Address
+                            </div>                         
+                            <div class="col-4" style="padding-top: 1%;margin-left: 5%;"> 
+                                <input class="form-control" id="address" name="address" value=<%=userInput.address%> >
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div style="padding-left: 5%; padding-top: 3%; padding-bottom: 5%;">
+                        <button class="btn btn-primary" type="submit" onclick="saveAddUser('save')">Save</button>
+                        <button class="btn btn-primary" type="submit" onclick="saveAddUser('add')" style="margin-right: 2%;">Add New</button>
+                        <button class="btn btn-primary" type="submit" onclick="clearData()" style="background-color: #5A5C7A; border-color: #5A5C7A;">Clear Data</button>
+                    </div>
+                </div>
+            </div>
+        <%include ./include/scripts %>
+        <%include ./include/footer %>
+        <script>
+            function saveAddUser(action) {
+                // Local variables
+                var role = document.getElementById('role');
+                var username = document.getElementById('username');
+                var password = document.getElementById('password');
+                var fullname = document.getElementById('full_name');
+                var gender = document.getElementById('gender');
+                var email = document.getElementById('email');
+                var phone = document.getElementById('phone');
+                var address = document.getElementById('address');
+
+                // Check if required info are filled
+                if (role.value == '' || username.value == '' || password.value == '' || fullname.value == '') {
+                    role.style.borderColor = 'red';
+                    username.style.borderColor = 'red';
+                    password.style.borderColor = 'red';
+                    fullname.style.borderColor = 'red';
+                    
+                    alert("Please fill in all the required fields.");
+                    return;
+                }
+                
+                // Data to send
+                var data = {
+                    role: role.value,
+                    username: username.value,
+                    password: password.value,
+                    name: fullname.value,
+                    gender: gender.value,
+                    email: email.value,
+                    phone: phone.value,
+                    address: address.value,
+                };
+
+                // POST request
+                axios.post('/account/saveAddUser', {data, action})
+                .then(function(response) {
+                    alert(response.data.message)
+                })
+                .catch(function(error) {
+                    console.log(error);
+                })
+            }
+
+            function clearData() {
+                document.getElementById('role').selectedIndex = 0;
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('full_name').value = '';
+                document.getElementById('gender').selectedIndex = 0;
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('address').value = '';
+            }
+        </script>
+    </body>
+</html>

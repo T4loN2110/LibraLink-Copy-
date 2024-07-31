@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+    <%include ./include/nav %>
+    <div class="container">
+        <div class="row">
+            <% include ./include/sidemenu_librarian %>
+            <div class="col-10 col-lg-9" >
+                <form action="/invoice/filterAllInvoice" method="post">
+                    <div class="row" style="padding-top: 3%; padding-bottom: 3%">
+                        <div class="col-4">
+                            <h1 style="padding-left: 3%;">All Invoices</h1>
+                        </div>
+
+                        <div class="col-2"></div>
+
+                        <div class="col-3">
+                            <select class="form-select" name="inv_type" style="color: black; font-size: 20px;">
+                                <option value=0 <%=types_1[0]%> >All</option>
+                                <option value=1 <%=types_1[1]%> >Book Ordering Invoice</option>
+                                <option value=2 <%=types_1[2]%> >Book Damaging Invoice</option>
+                                <option value=3 <%=types_1[3]%> >Late Return Invoice</option>
+                                <option value=4 <%=types_1[4]%> >Annual Fee Invoice</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="inv_stat" style="color: black; font-size: 20px;">
+                                <option value=0 <%=types_2[0]%> >All</option>
+                                <option value=1 <%=types_2[1]%> >Pending</option>
+                                <option value=2 <%=types_2[2]%> >Confirmed</option>
+                            </select>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-primary btn-block" type="submit">Find</button>
+                        </div>
+                    </div>
+                </form>
+                                    
+                <div style="padding-bottom: 3%;">
+                    <div class="horizontal_line"></div>
+                </div>
+                
+                <table class=" table table-responsive" name="management_table">
+                    <tr class="header_cell">
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Invoice Number</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                    <% if(invoice.length){
+                        for(var i = 0; i< invoice.length; i++) {%> 
+
+                    <tr>
+                        <th><%=i+1%></th>
+                        <th><%=invoice[i].ngay_tao%></th>
+                        <th><a href="#invoice_modal<%= i %>" data-bs-toggle="modal"><%=invoice[i].uid%></a></th>
+                        <th><%=invoice[i].loai_hd%></th>
+                        <th><%=invoice[i].so_tien%></th>
+                        <% if(invoice[i].ngay_tra==null){%> 
+                          <th> <div style="display: flex; align-items: center; justify-content: center; gap: 10;">
+                              <a href="update?id=<%=invoice[i]._id%>" class="action_button" style="margin-left: 5px;"id="deleteInvoice"onclick="SomeDeleteRowFunction()">Confirm</a>
+                              <a href="delete?id=<%=invoice[i]._id%>" class="action_button" style="margin-left: 5px;"id="deleteInvoice">Delete</a>
+                          </div></th>
+                        <% } if(invoice[i].ngay_tra!=null) { %>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10;">
+                            <th>Confirmed</th>
+                            </div>
+                        <% }}} %>  
+                    </tr>       
+                </table>
+
+                <div class="row">
+                <% if(pages > 0) { %>
+                    <nav class="mx-auto">
+                      <ul class="pagination" style="margin-top: 2rem;">
+                      
+                        <% if(current == 1) { %> 
+
+                            <li class="page-item disabled">
+                              <a class="page-link" href="1">First</a>
+                            </li>
+                        <% } else { %>
+
+                            <li class="page-item">
+                              <a class="page-link" href="1">First</a>
+                            </li>
+                        <% } %>
+                        
+                        <% var i = (Number(current) > 3 ? Number(current) - 2 : 1) %> 
+
+                        <% if(i !== 1) { %>
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#">...</a>
+                            </li>
+                        <% } %>
+                        <% for(; i <= (Number(current) + 2) && i <= pages; i++) { %>
+                        
+                          <% if(i == current) { %>
+                            <li class="page-item active">
+                              <% var link=i%>
+                              <a class="page-link" href=<%=link%> >
+                                <%= i %>
+                              </a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item">
+                              <% var link=i%>
+                              <a class="page-link" href=<%=link%> >
+                                <%= i %>
+                              </a>
+                            </li>
+                        <% } %>
+                        <% if (i == Number(current) + 2 && i < pages) { %>
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#">...</a>
+                            </li>
+                        <% } %>
+                        <% } %>
+                        
+                        <!-- LAST ITEM -->
+                        <% if(current == pages) { %> 
+
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#">
+                                Last
+                              </a>
+                            </li>
+                        <% } else { %>
+                        
+                            <li class="page-item">
+                              <% var link=pages%>
+                              <a class="page-link" href=<%=link%> >
+                                Last
+                              </a>
+                            </li>
+                        <% } %>
+                      </ul>
+                    </nav>
+                    <% } %>
+                </div>    
+            </div>    
+        </div>
+    </div>
+
+
+        <%include ./include/scripts %>
+        <%include ./include/footer %>
+        <% if(invoice.length) {
+          for (let i = 0; i < invoice.length; i++) {%>
+          <div class="modal fade" id="invoice_modal<%= i %>" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Invoice Details</h5>
+                </div>
+                <div class="modal-body">
+                  <div class="container-fluid">
+                    <div class="col-5">
+                      <h5 class="text-start">Bill to</h5>
+                    </div>
+                    <div class="col-5">
+                      <p class="text-start"><%=invoice[i].uid%></p>
+                    </div>
+                    <div class="col-5">
+                      <h5 class="text-start">Invoice Date</h5>
+                    </div>
+                    <div class="col-5">
+                      <p class="text-start"><%=invoice[i].ngay_tao%></p>
+                    </div>
+                    <div class="row">
+                      <table class="table-responsive" style="border-collapse: collapse; text-align: center; border: 1px solid black" id="invoice_detail_table">
+                          <tr class="header_cell">
+                            <th>No.</th>
+                            <th>ISBN</th>
+                            <th>Book Name</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Amount</th>
+                          </tr>
+                          <% var total = 0
+                            if(invoice[i].chitiet.length){
+                            for(var j = 0; j< invoice[i].chitiet.length; j++) { 
+                              total = total + invoice[i].chitiet[j].so_luong * invoice[i].chitiet[j].don_gia%> 
+                              <tr>
+                                <th><%= j + 1%></th>
+                                <th><%= invoice[i].chitiet[j].isbn%></th>
+                                <th><%= invoice[i].chitiet[j].ten%></th>
+                                <th><%= invoice[i].chitiet[j].so_luong%></th>
+                                <th><%= invoice[i].chitiet[j].don_gia%></th>
+                                <th><%= invoice[i].chitiet[j].so_luong * invoice[i].chitiet[j].don_gia%></th>
+                              </tr>
+                          <% }} %>
+                      </table>
+                    </div>
+                    <p>&nbsp;</p>
+                    <div class="col-5">
+                      <h5 class="text-start">Total: <%= total%></h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }} %>
+    </body>
+    <script>
+      $('table').on('click', '#deleteInvoice', function(e){
+          $(this).closest('tr').remove()
+          
+      })
+      function SomeDeleteRowFunction(o) {
+      //no clue what to put here?
+      var p=o.parentNode.parentNode;
+          p.parentNode.removeChild(p);
+     } 
+    </script> 
+</html>
+

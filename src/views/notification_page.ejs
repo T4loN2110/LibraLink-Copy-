@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+        <%include ./include/nav %>
+        <div class="container">
+            <div class="row">
+                <% include ./include/sidemenu_librarian %>
+                <div class="col-8 col-lg-8" >
+                    <div class="row" style="padding-top: 5%;">
+                        <div class="col-10">
+                            <div class="title text personaltitle margin-left:5%">Notifications</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="overflow-auto" style="max-height: 600px;">
+                            <h3>Click on the notification for more info</h3>
+                            <%if(allNoti.length==0){%>
+                                There is no notification!
+                            <%}else{%>
+                                <table class="table table-responsive table-hover align-middle table-bordered border-black">
+                                    <thead style="text-align: center;">
+                                        <th>ID</th>
+                                        <th>Summary</th>
+                                        <th>Date</th>
+                                        <th>Detail</th>
+                                    </thead>
+                                    <tbody>
+                            <% for(var i = 0; i< allNoti.length; i++){%>
+                                <tr style="text-align: center;">
+                                    <td><%=i+1%></td>
+                                    <td>
+                                    <%if(allNoti[i].trang_thai==0){%>
+                                        <%if(allNoti[i].loai_thong_bao==1){%>
+                                            Your book damaging invoice is almost due!
+                                        <%}else if(allNoti[i].loai_thong_bao==2){%>
+                                            You have not paid the annual fee!
+                                        <%}else if(allNoti[i].loai_thong_bao==3){%>
+                                            The deadline is almost here for your borrowed book!
+                                        <%}%>
+                                    <%}else if(allNoti[i].trang_thai==1){%>
+                                        <%if(allNoti[i].loai_thong_bao==1){%>
+                                            Your book damaging invoice is overdue!
+                                        <%}else if(allNoti[i].loai_thong_bao==2){%>
+                                            Notice of terminating the account
+                                        <%}else if(allNoti[i].loai_thong_bao==3){%>
+                                            The deadline for your borrowed book has come!
+                                        <%}%>
+                                        <%}%>
+                                    </td>
+                                    <%var ngayTao=new Date(allNoti[i].ngay_tao)%>
+                                    <%var str=ngayTao.getDate()+'/'+(ngayTao.getMonth()+1)+'/'+ngayTao.getFullYear()%>
+                                    <td><%=str%></td>
+                                    <td><button class="btn btn-primary" id="notiSummary" data-id="<%=allNoti[i]._id%>">See detail</button></td>
+                                </tr>
+                            <%}%>
+                            <%}%>
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="tempModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    Please wait...
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade modal-lg" id="myModal" role="dialog">
+            <div class="modal-dialog">
+            
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fs-5 w-100 text-center">Notification info</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  
+                </div>
+                <div class="modal-body">
+                    <h3 class="text text-danger" id="overdue"></h3>
+                  <p id="description"></p>
+                  <div id="createDate"></div>
+                  <div id="overdueDate"></div>
+                  <table class="table table-responsive" id="detail">
+                    <thead id="detailHeader"></thead>
+                    <tbody id="detailBody"></tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        <%include ./include/footer %>
+        <%include ./include/scripts %>
+    </body>
+    <script>
+        function toBase64(arr) {
+            arr = new Uint8Array(arr)
+            return btoa(
+               arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+         }
+        $(document).on("click","#notiSummary",function(){
+            const id=$(this).data("id");
+            $("#tempModal").modal("show");
+            axios.get('/notification/getNotiDetail?id='+id).then(function(response){
+                const loaiTB=response.data.notiDetails.loai_thong_bao
+                const trangThai=response.data.notiDetails.trang_thai
+                const ngay_tao=new Date(response.data.notiDetails.ngay_tao)
+                const ngay_toi_han=new Date(response.data.notiDetails.ngay_toi_han)
+                var header='<thead></thead>'
+                var desc=''
+                var detail=''
+                $("#detailHeader").empty()
+                $("#detailBody").empty()
+                $("#description").empty()
+                $("#createDate").empty()
+                $("#overdueDate").empty()
+                if(trangThai==1)
+                {
+                    $('#overdue').append("(Overdue)")
+                }
+                if(loaiTB==1)
+                {
+                    desc="Please proceed to pay these book(s) you have damaged/lost!"
+                    header='<tr><th>ID</th><th>Book name</th><th>Cover</th><th>Author</th><th>Price</th><th>Amount</th></tr>'
+                }
+                else if(loaiTB==2)
+                {
+                    desc="Please pay the annual fee "+response.data.notiDetails.so_tien
+                }
+                else if(loaiTB==3)
+                {
+                    desc="Please return the book you have borrowed!"
+                    header='<tr><th>ID</th><th>Book name</th><th>Cover</th><th>Author</th></tr>'
+                }
+                $("#detailHeader").append(header)
+                $("#description").append(desc)
+                $("#createDate").append("Date created: "+ngay_tao.getDate()+'/'+(ngay_tao.getMonth()+1)+'/'+ngay_tao.getFullYear()+"  "+ngay_tao.getHours()+':'+ngay_tao.getMinutes()+':'+ngay_tao.getSeconds())
+                $("#overdueDate").append("Deadline: "+ngay_toi_han.getDate()+'/'+(ngay_toi_han.getMonth()+1)+'/'+ngay_toi_han.getFullYear()+"  "+ngay_toi_han.getHours()+':'+ngay_toi_han.getMinutes()+':'+ngay_toi_han.getSeconds())
+                response.data.notiDetails.chi_tiet.forEach(function(book,idx,arr)
+                {
+                    bookDetail=''
+                    if(loaiTB==1)
+                    {
+                        bookDetail+='<tr>'
+                        bookDetail+='<td>'+(idx+1)+'</td>';
+                        bookDetail+='<td>'+book.ten+'</td>';
+                        bookDetail+='<td>'+'<img src="data:image/'+book.anh_bia.contentType+';base64,'+toBase64(book.anh_bia.data)+'" class="img-fluid"/>'+'</td>';
+                        bookDetail+='<td>'+book.tac_gia+'</td>';
+                        bookDetail+='<td>'+book.don_gia+'</td>';
+                        bookDetail+='<td>'+book.so_luong+'</td>';
+                        bookDetail+='</tr>'
+                    }
+                    else if(loaiTB==3)
+                    {
+                        bookDetail+='<tr>'
+                        bookDetail+='<td>'+(idx+1)+'</td>';
+                        bookDetail+='<td>'+book.ten+'</td>';
+                        bookDetail+='<td>'+'<img src="data:image/'+book.anh_bia.contentType+';base64,'+toBase64(book.anh_bia.data)+'" class="img-fluid"/>'+'</td>';
+                        bookDetail+='<td>'+book.tac_gia+'</td>';
+                        bookDetail+='</tr>'
+                    }
+                    $("#detailBody").append(bookDetail)
+                    
+                })
+                $("#tempModal").modal("hide");
+                $("#myModal").modal("show");
+            });
+            
+            
+          })
+    </script>
+</html>

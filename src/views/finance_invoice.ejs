@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+    
+    <% include ./include/nav %> 
+        <div class="container">
+        <div class="row">
+            <% include ./include/sidemenu_librarian %>
+            <div class="col-10 col-lg-9">
+                <div class="text personaltitle" style="padding-left: 5%; padding-top: 5%;">
+                    <div class="row">
+                        <div class="col-10">
+                            Create Invoices  
+                        </div>                         
+                        <div class="col-2">
+                            <td>
+                                <button class="btn btn-primary" onclick="saveInvoice()" type="submit">Save & Send</button>
+                            </td>
+                        </div> 
+                    </div>
+                    <div class="horizontal_line" style="margin-top: 3%;"></div>
+                </div>
+                <div class="text personaltext" style="padding-left: 5%; padding-top: 5%;">   
+                    <div class="row">
+                        <div class="col-2">
+                            Type of Invoice 
+                        </div>                         
+                        <div class="col-3" style="padding-top: 1%; margin-left: 5%;">
+                            <select class="form-select" id="invoice_type" name="invoice_type">
+                                <option selected>Select type</option>
+                                <option value="Book Ordering Invoice">Book Ordering Invoice</option>
+                                <option value="Book Damaging Invoice">Book Damaging Invoice</option>
+                              </select>                           
+                        </div>         
+                        <!-- <div class="col-2" style="margin-left: 10%;">
+                            Invoice Number 
+                        </div>                         
+                        <div class="col-2" style="padding-top: 1%;margin-left: 5%;">
+                            <input class="form-control" placeholder="inv00001" aria-label="Content to search">                         
+                        </div>            -->
+                    </div>  
+                    <div class="row">
+                        <div class="col-2">
+                            Username 
+                        </div>                         
+                        <div class="col-3" style="padding-top: 1%;margin-left: 5%;"> 
+                            <input class="form-control" id="username" name="username">
+                        </div>
+                    </div>      
+                    <div class="row">
+                        <div class="col-2">
+                            Invoice date 
+                        </div>                         
+                        <div class="col-3" style="padding-top: 1%;margin-left: 3.8%;"> 
+                            <div class="container">
+                                <div style="position: absolute">
+                                    <input class="form-control"
+                                        type="date" id="date" name="datePickUp" />
+                                </div>
+                              </div>
+                        </div>
+                    </div>   
+                    <p>&nbsp;</p> 
+                    <div class="col-10">
+                    <table class="table-responsive table-bordered table-hover table-sm table-responsive" id="FinanceTable" name="FinanceTable">
+                        <thead class="thead">
+                          <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Book Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td><input class="form-control" style="margin-top: 7%;" id="bookid1"></td>
+                            <td><input class="form-control" style="margin-top: 7%;" id="description1"></td>
+                            <td><input class="form-control" style="margin-top: 7%;" id="quantity1"></td>
+                            <td><input class="form-control" style="margin-top: 7%;" id="unitprice1"></td>
+                          </tr>
+                        </tbody>
+                    </table>  
+                    </div>
+                    <a class="btn btn-primary rounded-0 btn-block" id="insertRow" href="#">Add new row</a>
+                    <p>&nbsp;</p> 
+                    <div class="row">
+                        <div class="col-6">
+                            Aditional Notes
+                            <input class="form-control box" id="note" placeholder="Thanks for your business" name="note">   
+                            <div class="row">
+                                <div class="col-4">
+                                    <td>
+                                        <button class="btn btn-primary" onclick="saveInvoice()" type="submit">Save & Send</button>
+                                    </td>
+                                </div>  
+                                <div class="col-4">
+                                    <td>
+                                        <button class="btn btn-primary" onclick="Clear()">Clear Data</button>
+                                    </td>
+                                </div>
+                            </div>  
+                        </div>    
+                        <!-- <div class="col-1" style="margin-top: 5%;">
+                            Total
+                        </div>
+                        <div class="col-2" style="margin-top: 5%;">  
+                            <input class="box" id="total" placeholder="" aria-label=""> 
+                        </div> -->
+                    </div>
+                        
+                  </div>  
+                  
+                </div>       
+                <div>    
+                    
+            </div>
+        </div>
+    </div>
+        <% include ./include/scripts %>
+        <% include ./include/footer %>
+        <script>
+
+            //Table
+            $(function () {
+            
+              // Start counting from the third row
+              var counter = 2;
+            
+              $("#insertRow").on("click", function (event) {
+                  event.preventDefault();
+            
+                  var newRow = $("<tr>");
+                  var cols = '';
+            
+                  // Table columns
+                  cols += '<th scrope="row">' + counter + '</th>';
+                  cols += '<td><input class="form-control rounded-0" type="text" id="bookid'+counter+'"></td>';
+                  cols += '<td><input class="form-control rounded-0" type="text" id="description'+counter+'"></td>';
+                  cols += '<td><input class="form-control rounded-0" type="text" id="quantity'+counter+'"></td>';
+                  cols += '<td><input class="form-control rounded-0" type="text" id="unitprice'+counter+'"></td>';
+            
+                  cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow"><i class="fa fa-trash"></i></button</td>';
+            
+                  // Insert the columns inside a row
+                  newRow.append(cols);
+            
+                  // Insert the row inside a table
+                  $("table").append(newRow);
+            
+                  // Increase counter after each row insertion
+                  counter++;
+              });
+            
+              // Remove row when delete btn is clicked
+              $("table").on("click", "#deleteRow", function (event) {
+                  $(this).closest("tr").remove();
+                  counter -= 1
+              });
+            });
+            function saveInvoice()
+            {
+                
+                const type =document.getElementById("invoice_type").value
+                const name =document.getElementById("username").value
+                const date =document.getElementById("date").value
+                const note=document.getElementById("note").value
+                if (type=="" || name.trim()=="" || date.trim()==""){
+                    alert("Please finish the invoice information");
+                    return;
+                }
+                var detail=[]
+                var total=0
+                
+                var oTable = document.getElementById("FinanceTable");
+                for (let i = 1; i < oTable.rows.length; i++) {
+                    for (let j = 1; j < 5; j++) {
+                        if (oTable.rows[i].cells[j].childNodes[0].value==""){
+                            alert("Please finish the invoice details");
+                            return;
+                        }
+                    }
+                    
+                    detail.push(
+                        {
+                            
+                            isbn:oTable.rows[i].cells[1].childNodes[0].value,
+                            ten:oTable.rows[i].cells[2].childNodes[0].value,
+                            so_luong:oTable.rows[i].cells[3].childNodes[0].value,
+                            don_gia:oTable.rows[i].cells[4].childNodes[0].value
+                        })  
+                        total+=Number(oTable.rows[i].cells[3].childNodes[0].value)*Number(oTable.rows[i].cells[4].childNodes[0].value)
+                }
+
+                axios.post('/invoice/create', 
+                {
+                    uid: name,
+                    loai_hd: type,
+                    ngay_tao: date,
+                    ngay_tra:null,
+                    ghi_chu:note,
+                    chitiet:detail,
+                    so_tien:total
+                }
+                )
+        
+                
+            }
+
+            function Clear() {
+            document.getElementById("all").reset();
+            }
+
+            </script>       
+    </body>
+</html>

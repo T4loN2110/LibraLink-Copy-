@@ -1,0 +1,65 @@
+<!-- jQuery first, then Popper.js, then Bootstrap JS. -->
+<script src="jquery/dist/jquery.slim.min.js"></script>
+<script src="@popperjs/core/dist/umd/popper.min.js"></script>
+<script src="bootstrap/dist/js/bootstrap.min.js"></script> 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function submitLogin()
+    {
+        const usernameInput = document.getElementById("loginUsername").value //getting the value from input typed
+        const passwordInput = document.getElementById("loginPassword").value //getting the value from input typed
+            axios.post('/auth/login', 
+            {
+                username: usernameInput,
+                password: passwordInput
+            }
+            ).then(function(response)
+            {
+                if(response.data.errMes) {alert(response.data.errMes)}
+                else
+                {
+                    window.location.reload();
+                    alert("Login success!")
+                }
+            }); 
+    }
+    function submitRegister()
+    {
+        const nameSignUp = document.getElementById("signUpName").value //getting the value from input typed
+        const usernameSingUp=document.getElementById("signUpUsername").value
+        const passwordSignUp = document.getElementById("signUpPassword").value //getting the value from input typed
+        const re_passwordSignUp=document.getElementById("re_signUpPassword").value
+        axios.post('/auth/signUp', 
+        {
+            name: nameSignUp,
+            username: usernameSingUp,
+            password: passwordSignUp,
+            rePassword:re_passwordSignUp
+        }
+        ).then(function(response)
+        {
+            if(response.data.errMes) {alert(response.data.errMes)}
+            else
+            {
+                window.location.reload();
+                alert("Register success!")
+            }
+        }); 
+    }
+    function searchBook()
+    {
+        const searchBy =document.forms["searchBookForm"]["searchBy"].value //getting the value from input typed
+        const searchContent=document.forms["searchBookForm"]["searchContent"].value
+        if (searchBy.trim()=="")
+        {
+            alert("Please choose the search condition");
+            return false;
+        }
+        if(searchContent.trim()=="")
+        {
+            alert("Please enter what you want to search");
+            return false;
+        }
+        return true;
+    }
+</script>

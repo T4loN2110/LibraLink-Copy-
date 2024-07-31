@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+        <%include ./include/nav %>
+        <form class="d-flex" name="searchInvoiceForm" action="/search_invoice"  method="post">
+        <div class="container">
+        <div class="row">
+            <% include ./include/sidemenu_librarian %>
+            <div class="col-10 col-lg-9" >
+                <div class="row" style="padding-top: 5%;">
+                <div class="col-10">
+                <div class="title text personaltitle margin-left:5%">All Invoices</div>
+                </div>
+                <div class="col-2">
+                    <td>
+                        <button class="btn btn-primary" type="submit">Find</button>
+                    </td>
+                </div> 
+                </div>
+                <div class="row" style="padding-top: 5%;">
+                    
+                    <div class="col-3">
+                    <select class="form-select" id="invoice_type" name="invoice_type" style="color: black; font-size: 20px;">
+                        <option selected>All</option>
+                        <option value="Book Ordering Invoice">Book Ordering Invoice</option>
+                        <option value="Book Damaging Invoice">Book Damaging Invoice</option>
+                        <option value="Late Return Invoice">Late Return Invoice</option>
+                    </select>    
+                    </div>      
+                    <div class="col-3">
+                    <select class="form-select" id="invoice_type2" name="invoice_type2" style="color: black; font-size: 20px;">
+                        <option selected>All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                    </select>
+                    </div>  
+
+
+                </div>
+                </form>
+                <p>&nbsp;</p> 
+
+                    
+                  
+                <table class="table-responsive" id="management_table" name="management_table">
+                    <tr class="header_cell">
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Invoice Number</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                    <% if(invoice.length){
+                        for(var i = 0; i< invoice.length; i++) {%> 
+
+                    <tr>
+                        <th><%=i+1%></th>
+                        <th><%=invoice[i].ngay_tao%></th>
+                        <th><%=invoice[i].uid%></th>
+                        <th><%=invoice[i].loai_hd%></th>
+                        <th><%=invoice[i].so_tien%></th>
+                        <% if(invoice[i].ngay_tra==null){%> 
+
+                        <th> <div style="display: flex; align-items: center; justify-content: center; gap: 10;">
+                            <a href="/update_invoice?id=<%=invoice[i]._id%>" class="action_button" style="margin-left: 5px;"id="deleteInvoice"onclick="SomeDeleteRowFunction()">Confirm</a>
+                            <a href="/delete_invoice?id=<%=invoice[i]._id%>" class="action_button" style="margin-left: 5px;"id="deleteInvoice">Delete</a>
+                        </div></th>
+                        <% } if(invoice[i].ngay_tra!=null) { %>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10;">
+                            <th>Confirmed</th>
+                            </div>
+                        <% }}} %>  
+
+ 
+                    </tr>             
+                </table> 
+            </div>    
+        </div>
+    </div>
+
+
+        <%include ./include/scripts %>
+        <%include ./include/footer %>
+    </body>
+    <script>
+    $('table').on('click', '#deleteInvoice', function(e){
+        $(this).closest('tr').remove()
+        
+     })
+    function SomeDeleteRowFunction(o) {
+     //no clue what to put here?
+     var p=o.parentNode.parentNode;
+         p.parentNode.removeChild(p);
+    } 
+
+    </script> 
+</html>
+

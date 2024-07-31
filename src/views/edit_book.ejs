@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+    
+    <% include ./include/nav %> 
+        <div class="container">
+            <div class="row">
+                <% include ./include/sidemenu_librarian %>
+                <div class="col-8 col-lg-8">
+                    
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="text personaltitle" style="padding-left: 5%; padding-top: 5%;">
+                                Add & Edit Book
+                            </div>  
+                            </div>                         
+                            <div class="col-2">
+                                <td>
+                                    <button class="btn btn-primary" onclick="processBook()" type="submit">Save / Add New</button>
+                                </td>
+                            </div> 
+                        
+                        <div class="horizontal_line" style="margin-top: 3%;"></div>
+                        
+                        
+                            <div class="container mt-5" style="height: 40%; margin-left: 10%">
+                                
+                                <div id="imagePreview" class="mt-2" style="border: 2px solid black; max-width: 30%; max-height: 80%; margin-left: 3%">
+                                    <%if(book.anh_bia.content_type){%>
+                                        <img src="data:image/<%=book.anh_bia.contentType%>;base64,<%=book.anh_bia.data.toString('base64')%>"/>
+                                    <%}%>
+                                </div>
+                                <input type="file" id="anh_bia_sach" name="anh_bia_sach" accept="image/*" style="display: none;" required>
+                                <div class="col-10" style="margin: 1%; max-width: 25%; text-align: center">
+                                    <button id="uploadButton" class="btn btn-primary" style="margin-right: 5%">Change</button>
+                                    <button id="clearButton" class="btn btn-secondary ml-2" style="margin-right: 5%">Clear Data</button>
+                                </div>
+                            </div>
+   
+                            <div class="text personaltext" style="padding-left: 5%; padding-top: 5%;">   
+                                <div class="row">
+                                    <div class="col-2">
+                                        ISBN 
+                                    </div>            
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;">
+                                        <input type="text" class="form-control" id="isbn" name="isbn" value="<%=book.isbn%>">                         
+                                    </div>     
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        Title
+                                    </div>                         
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;"> 
+                                        <input type="text" class="form-control" id="title" name="title" value="<%=book.ten%>">
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-2">
+                                        Publish Year
+                                    </div>                         
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;"> 
+                                        <input type="number" class="form-control" id="year" name="year" value="<%=book.nam_xb%>">
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-2">
+                                        Authors
+                                    </div>                         
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;"> 
+                                        <input type="text" class="form-control" id="author" name="author" value="<%=book.tac_gia%>">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        Categories
+                                    </div>    
+                                    <div class="col-8" style="margin-left: 5%; max-height: 300px; overflow: auto;"> 
+                                        <div id="checkboxContainer">
+                                            <% genres.forEach((genre,idx) => { %>
+                                                <div class="form-check">
+                                                <label class="form-check-label" for="<%= genre._id %>" ><%= genre.ten %></label>
+                                                <%if(book.the_loai.length!=0){%>
+                                                    
+                                                    <%if(book.the_loai.includes(genre)){%>
+                                                    <input type="checkbox" class="buh form-check-input" name="genre" id="genre" value="<%= genre.ten %>" checked>
+                                                    <%}else{%>
+                                                    <input type="checkbox" class="buh form-check-input" name="genre" id="genre" value="<%= genre.ten %>">
+                                                    <%}%>
+                                                    <%}else{%>
+                                                    <input type="checkbox" class="buh form-check-input" name="genre" id="genre" value="<%= genre.ten %>">
+                                                    <%}%>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    </div>         
+                                </div>  
+                                <div class="row">
+                                    <div class="col-2">
+                                        Summary
+                                    </div>                         
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;"> 
+                                        <textarea type="text" class="form-control" id="summary" name="summary" value="<%=book.tom_tat%>"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        Price
+                                    </div>                         
+                                    <div class="col-5" style="padding-top: 1%;margin-left: 5%;"> 
+                                        <input type="number" class="form-control" id="price" name="price" value="<%=book.gia_bia%>">
+                                    </div>
+                                </div>    
+                            </div>
+                            <%if(book.ten){%>
+                                <input hidden id="heh" value="<%=book._id%>">
+                                <%}else{%>
+                                <input hidden id="heh" value="no">
+                                    <%}%>
+                            <div class="Book_container" style="margin-left: 5%; margin-top: 2%;">
+                                <table class="table table-responsive align-middle table-bordered border-black " id="Department" name="Department" style="display: block; max-height: 400px; overflow: auto;">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th scope="col" style="position: sticky; top: 0;">No</th>
+                                            <th scope="col" style="position: sticky; top: 0;">Department</th>
+                                            <th scope="col" style="position: sticky; top: 0;">Phone Number</th>
+                                            <th scope="col" style="position: sticky; top: 0;">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%for (var i=0;i<departments.length;i++){%>
+                                        <tr>
+                                            <td scope="row">1</td>
+                                            <td hidden><%=departments[i]._id%></td>
+                                            <td><%= departments[i].dia_chi %></td>
+                                            <td><%= departments[i].sdt %></td>
+                                            <%var val=0%>
+                                            <%if(book.co_so.length!=0){%>
+                                                <%for (var j=0;j<book.co_so.length;j++){%>
+                                                    <%if(book.co_so[j].ma_co_so==departments[i]._id){%>
+                                                        val=book.co_so[j].so_luong;
+                                                        break;
+                                                    <%}%>
+                                                <%}%>
+                                            <%}%>
+                                            <td><input class="form-control" type="number" id="quantity" min="0" value="<%=val%>"></td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                </table>
+                            </div>
+                    <div style="padding-left: 37%;">
+                            <button class="btn btn-primary" onclick="processBook()" type="submit" style="margin-right:3%; margin-top: 5%;">Save / Add New</button>
+                            <button class="btn btn-secondary" type="submit" style=" margin-top: 5%">Clear Data</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </body>
+
+        <%include ./include/footer %>
+        <%include ./include/scripts %>
+    <script>
+        document.getElementById("uploadButton").addEventListener("click", function () {
+        document.getElementById("anh_bia_sach").click();
+    });
+
+    document.getElementById("anh_bia_sach").addEventListener("change", function (event) {
+        var imagePreview = document.getElementById("imagePreview");
+        imagePreview.innerHTML = ""; // Clear previous preview
+        
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = document.createElement("img");
+                img.src = e.target.result;
+                img.classList.add("img-thumbnail");
+                imagePreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById("clearButton").addEventListener("click", function () {
+        var imagePreview = document.getElementById("imagePreview");
+        imagePreview.innerHTML = "";
+        document.getElementById("anh_bia_sach").value = null;
+    });
+    function getCheckedBoxes(chkboxName) {
+        var checkboxes = document.getElementsByName(chkboxName);
+        var checkboxesChecked = [];
+        // loop over them all
+        for (var i=0; i<checkboxes.length; i++) {
+           // And stick the checked ones onto an array...
+           if (checkboxes[i].checked) {
+              checkboxesChecked.push(checkboxes[i]);
+           }
+        }
+        // Return the array if it is non-empty, or null
+        return checkboxesChecked.length > 0 ? checkboxesChecked : null;
+      }
+      
+      // Call as
+      
+    function processBook()
+    {
+        const id=document.getElementById("heh").value;//0 for add
+        var genreList = getCheckedBoxes("genre");
+        var genre=[]
+        if(!genreList)
+        {
+            return alert("Must have at least 1 category!")
+        }
+        genreList.forEach(function(ugh)
+        {
+            genre.push(ugh.value)
+        })
+        console.log(genre)
+        const isbn=document.getElementById("isbn").value;
+        const ten=document.getElementById("title").value;
+        const nam_xb=document.getElementById("year").value;
+        const tac_gia=document.getElementById("author").value;
+        const tom_tat=document.getElementById("summary").value
+        const gia_bia=document.getElementById("price").value;
+        const file=document.getElementsByName("anh_bia_sach");
+        if(!isbn||!ten||nam_xb==0||!tac_gia||!tom_tat||!gia_bia)
+        {
+            alert("Please enter all required field!")
+            return;
+        }
+        if($("#anh_bia_sach").val() == ''&&id=="no"){
+            return alert("Book must have a cover!")
+        }
+        
+        var detail=[]
+        var depTable = document.getElementById("Department");
+        for (let i = 1; i < depTable.rows.length; i++) {
+            detail.push(
+                {
+                    ma_co_so:depTable.rows[i].cells[1].innerHTML,
+                    dia_chi:depTable.rows[i].cells[2].innerHTML,
+                    sdt:depTable.rows[i].cells[3].innerHTML,
+                    so_luong:depTable.rows[i].cells[4].childNodes[0].value
+                })  
+        }
+        var form = new FormData();
+        if($("#anh_bia_sach").val())
+        {
+            file.forEach(function(f)
+            {
+                form.append('anh_bia_sach', f.files[0]);
+            })
+        }
+        
+        form.append('id',id)
+        form.append('isbn',isbn)
+        form.append('the_loai',JSON.stringify(genre))
+        form.append('ten',ten)
+        form.append('nam_xb',nam_xb)
+        form.append('tac_gia',tac_gia)
+        form.append('tom_tat',tom_tat)
+        form.append('gia_bia',gia_bia)
+        form.append('co_so',JSON.stringify(detail))
+        axios.post("/book/process",form
+        ,{headers: {
+            'Content-Type': 'multipart/form-data;',
+          }}).then(function(response){
+            if(response.data.errMes) {alert(response.data.errMes)}
+            else
+            {
+                window.location.reload();
+                alert("Book saved!")
+            }
+        })
+    }
+
+</script>
+</html>

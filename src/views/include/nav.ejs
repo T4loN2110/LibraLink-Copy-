@@ -1,0 +1,133 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" >
+    <a class="navbar-brand" style="margin-left: 5%" href="/"><img src="logonobg.png" width="50px" height="50px"></a>
+    <button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <form class="d-flex" name="searchBookForm" style="width: 450px;" onsubmit="return searchBook()" action="/search/1"  method="post">
+        <select class="form-select" aria-label="Default select example" name="searchBy">
+            <option value="" disabled selected>Search by</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+          </select>
+        <input class="form-control" type="text" name="searchContent" placeholder="Content to search" aria-label="Content to search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    <div class="container col-8 col-lg-8 d-flex">
+      <%if(!user){%>
+        <ul class="navbar-nav me-auto" style="margin-left: 70%;">
+      <%}else if(user.role==3){%>
+        <ul class="navbar-nav me-auto" style="margin-left: 50%;">
+        <%}else if (user.role==1){%>
+          <ul class="navbar-nav me-auto" style="margin-left: 65%;">
+        <%}else if(user.role==2){%>
+          <ul class="navbar-nav me-auto" style="margin-left: 65%;">
+        <%}else{%><ul class="navbar-nav me-auto" style="margin-left: 65%;"><%}%>
+        <li class="nav-item active" style="padding-top: 2%;">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <% if (user != undefined && user != null && user.role == 2) { %>
+        <li class="nav-item" style="padding-top: 2%;">
+          <a class="nav-link" href="/book/1">Books</a>
+        </li>
+        <% } %>
+        <% if (user != undefined && user != null && user.role == 3) { %>
+        <li class="nav-item col-3" style="padding-top: 2%;">
+          <a class="nav-link" href="/account/1">All Accounts</a>
+        </li>
+        <li class="nav-item col-4" style="padding-top: 2%;">
+          <a class="nav-link" href="/account/addEditUserPage">Add & Edit Users</a>
+        </li> <% } %>
+        <% if (user==undefined||user==null) { %>
+        <li class="nav-item" style="padding-top: 2%;">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginForm">Login</a>
+        </li>
+        <li class="nav-item" style="padding-top: 2%;">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerForm">Sign Up</a>
+        </li>
+        <% }else{ %>
+        <li class="nav-item">
+          <div id="noti">
+            <a href="/notification/notifs">
+              <span class="fa-stack small fa-5x has-badge" data-count="<%=notiCount%>">
+                <i class="fa fa-circle fa-stack-2x" style="width: 100%;"></i>
+                <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <div class="btn-group">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-target="#userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="default_profile_avatar.png" width="50px" height="50px">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" id="userMenu" style="margin-right: 8%;">
+                  <li><a class="dropdown-item" href="/account/personalProfile">Personal Profile</a></li>
+                  <%if(user.role==2){%>
+                  <li><a class="dropdown-item" href="/borrow/allRequest/1">View all request</a></li>
+                  <%}else if(user.role==1){%>
+                    <li><a class="dropdown-item" href="/borrow/selfRequest/1">View your request</a></li>
+                  <%}%>
+                  <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+                </ul>
+              </div>
+        </li>
+        <% }  %>
+      </ul>
+    </div>
+    </div> 
+</nav>
+<div class="modal fade" id="loginForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginForm" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+      
+        <h1 class="modal-title fs-5 w-100 text-center"><img src="default_profile_avatar.png" width="50px" height="50px">&nbsp;&nbsp;&nbsp;LibraLink</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h4 name="loginTitle">Login form</h4>
+          <div class="form-outline mb-4">
+              <input type="text" id="loginUsername" class="form-control form-control-lg" placeholder="Username" />
+            </div>
+
+            <div class="form-outline mb-4">
+              <input type="password" id="loginPassword" class="form-control form-control-lg" placeholder="Password" />
+            </div>
+            <div><p>Don't have an account? <a data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerForm" href="#">Register now</a></p></div>
+      </div>
+      <div class="modal-footer" class="w-100 text-center">
+        <button type="button" class="btn btn-primary w-100" onclick="return submitLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="registerForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="registerForm" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5 w-100 text-center"><img src="default_profile_avatar.png" width="50px" height="50px">&nbsp;&nbsp;&nbsp;LibraLink</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <h4>Register form</h4>
+    <div class="form-outline mb-4">
+      <input type="text" id="signUpName" class="form-control form-control-lg" placeholder="Your name(Optional)" />
+    </div>
+    <div class="form-outline mb-4">
+        <input type="text" id="signUpUsername" class="form-control form-control-lg" placeholder="Username" />
+      </div>
+
+      <div class="form-outline mb-4">
+        <input type="password" id="signUpPassword" class="form-control form-control-lg" placeholder="Password" />
+      </div>
+      <div class="form-outline mb-4">
+        <input type="password" id="re_signUpPassword" class="form-control form-control-lg" placeholder="Re-enter password" />
+      </div>
+</div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-primary w-100" onclick="return submitRegister()">Register</button>
+  </div>
+  </div>
+</div>
+</div>

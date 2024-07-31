@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+        <% include ./include/nav %>
+        <div class="modal fade pop_borrow" id = "borrowBook" tabindex="-1" role="dialog" aria-labelledby="borrowBook" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5 w-100 text-center"><img src="logo.png" width="150px" height="50px"></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Please choose the reserved time you would like to pick up the book.</p>
+                  <div class="form-outline mb-4">
+                    <label for="ghiChu" >Date (must be in range 1-365 day(s) from now)</label>
+                        <input class="form-control"type="date" id="date" name="ngayMuon" />
+                  </div>  
+                  <span id="depIdHolder" hidden></span>
+                  <div class="form-outline mb-4">
+                    <label for="ghiChu" >Time </label>
+                      <input class="form-control"type="time" id="time" name="thoiGianMuon"/>
+                    </div>   
+                    <div class="form-outline mb-4">
+                      <label for="ghiChu" >Note</label>
+                      <input type="text" name="ghiChu" class="form-control form-control-lg" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                  <div style="margin-top: 10%;">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitBorrow()">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+       
+          
+        <div class="container" style="padding-top: 20px;">
+        <%if(book){%>
+        <div class="row" style="padding-bottom: 30px;">
+            <div class="col-4 col-lg-4">
+                <img src="data:image/<%=book.anh_bia.contentType%>;base64,<%=book.anh_bia.data.toString('base64')%>" class="img-fluid"/>
+            </div>
+            <input hidden value="<%=book._id%>" name="hiddenBookId">
+            <div class="col-7 col-lg-7">
+                <h1><%=book.ten%></h1>
+                Author: <%=book.tac_gia%><br>
+                Year of publication: <%=book.nam_xb%><br>
+                ISBN: <%=book.isbn%> <br>
+                Categories: 
+                <%book.the_loai.forEach(function(cat){%>
+                  <%=cat%>
+                  <%})%>
+            </div>
+            <%if (check==false){%>
+            <div class="col-1 col-lg-1">
+
+                  <a href="/rating/add_favourite?id=<%=book.isbn%>" class="btn btn-primary" type="submit" id="myButton1">Add to favourite</a>
+
+                <!-- <div class="wrapper">
+                    <input type="checkbox" id="st1" value="1" />
+                    <label for="st1"></label>
+                </div> -->
+            </div>
+            <%}else{%>
+              <div class="col-1 col-lg-1">
+
+                <a href="/rating/remove_favourite?id=<%=book.isbn%>" class="btn btn-primary" onclick="change()" type="submit" value=""id="myButton1">Remove from favourite</a>
+
+              <!-- <div class="wrapper">
+                  <input type="checkbox" id="st1" value="1" />
+                  <label for="st1"></label>
+              </div> -->
+          </div>
+
+           <%}%>
+        </div>
+        <div class="row table-responsive text-center" style="padding-bottom: 30px;">
+            <table class="department">
+                <thead>
+                    
+                    <tr>
+                        <th> Department </th>
+                        <th>Call No.</th>
+                        <th>Books left</th>
+                        <th>Option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <%book.co_so.forEach(function(dep){%>
+                <tr>
+                    <td><%=dep.dia_chi%></td>
+                    <td><%=dep.sdt%></td>
+                    
+                    <%if(dep.so_luong<=0||user.role!=1){%>
+                      <td>0</td>
+                      <td><button class="btn btn-primary borrow" disabled>Borrow</button></td>
+                    <%}else{%>
+                      <td><%=dep.so_luong%></td>
+                      <td><button class="btn btn-primary borrow" data-id="<%=dep.ma_co_so%>">Borrow</button></td>
+                    <%}%>
+                </tr>
+                <%})%>
+                </tbody>
+            </table>
+        </div>
+        <%}else{%>
+            <div class="text text-warning">Pls stop finding exploit ? </div>
+        <%}%>
+        <div class="row" style="padding-bottom: 30px; border-style: solid;border-width: 0.5px">
+            <h3 style = "margin-left: 0.5%">Synopsis</h3>
+            <div style = "margin-left: 1%"><%=book.tom_tat%></div>
+        </div>
+        <%if (comment.length){%>
+          <%for (var i=0; i<comment.length; i++){%>
+        <div class="row" style="padding-bottom: 30px;">
+            <div class="col-3 col-lg-2"> 
+                <div style="display:inline-block;align-items: center;">
+                <img src="ugh.jpg" width="65px" height="65px">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                </div>           
+                    <div style="display:inline-block">
+                    <b><%=comment[i].ten%></b><br>
+                    <% var date2=new Date(comment[i].ngay_dang)%>
+                    <% var str2=date2.getDate()+'/'+(date2.getMonth() + 1)+'/'+date2.getFullYear()%>
+                    <%=str2%>
+                    </div>                    
+            </div>
+            <div class="col-9 col-lg-10" style="border-style: solid;border-width: 0.5px;">
+                <%=comment[i].noi_dung%>
+            </div>
+            
+        </div><%}}%>
+
+        <div class="row" style="margin-top: 2%; margin-bottom: 2%;">
+          <div class="col-3 col-lg-2"> 
+              <div style="display:inline-block;align-items: center;">
+              <img src="ugh.jpg" width="65px" height="65px">
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              </div>           
+                  <div style="display:inline-block">
+                  <b><%=user.username%></b><br>
+                  </div>                    
+          </div>
+          <div class="col-9 col-lg-10">
+            <form action="../rating/create"  method="post">
+              <input hidden value="<%=book._id%>" name="bookID">
+            <input class="form-control" name="mycomment" >
+            <button class="btn btn-primary" type="submit">Post</button>
+          </form>
+
+          </div>         
+      </div>
+      <% if(pages > 0) { %>
+        <nav class="mx-auto">
+          <ul class="pagination" style="margin-top: 2rem;">
+          
+            <!-- FIRST ITEM -->  
+            <% if(current == 1) { %> 
+
+                <li class="page-item disabled">
+                  <a class="page-link" href="1/">First</a>
+                </li>
+            <% } else { %>
+
+                <li class="page-item">
+                  <a class="page-link" href="1/">First</a>
+                </li>
+            <% } %>
+            
+            <!-- ITEMS  -->
+            <% var i = (Number(current) > 3 ? Number(current) - 2 : 1) %> 
+
+            <% if(i !== 1) { %>
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">...</a>
+                </li>
+            <% } %>
+            <% for(; i <= (Number(current) + 2) && i <= pages; i++) { %>
+            
+              <% if(i == current) { %>
+                <li class="page-item active">
+                  <% var link=i%>
+                  <a class="page-link" href=<%=link%>>
+                    <%= i %>
+                  </a>
+                </li>
+            <% } else { %>
+                <li class="page-item">
+                  <% var link=i%>
+                  <a class="page-link" href=<%=link%>>
+                    <%= i %>
+                  </a>
+                </li>
+            <% } %>
+            <% if (i == Number(current) + 2 && i < pages) { %>
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">...</a>
+                </li>
+            <% } %>
+            <% } %>
+            
+            <!-- LAST ITEM -->
+            <% if(current == pages) { %> 
+
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">
+                    Last
+                  </a>
+                </li>
+            <% } else { %>
+            
+                <li class="page-item">
+                  <% var link=i%>
+                  <a class="page-link" href=<%=link%>>
+                    Last
+                  </a>
+                </li>
+            <% } %>
+          </ul>
+        </nav>
+        <% } %>
+    </div> 
+
+    </div>
+        <% include ./include/scripts %>
+        <% include ./include/footer %>
+    </body>
+    <script type="text/javascript">
+      $(document).on('click', '.borrow', function(){
+        var depId=$(this).data('id');
+        $('#depIdHolder').html( depId );
+        $('#borrowBook').modal('show');
+      })
+      function submitBorrow()
+      {
+        const checkDate=new Date(document.getElementById("date").value+" "+document.getElementById("time").value)
+        var curDate=new Date()
+        curDate.setDate(curDate.getDate()+1);
+        var maxDate=new Date()
+        maxDate.setDate(maxDate.getDate()+365);
+        
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        });
+        const co_so=document.getElementById("depIdHolder").innerHTML;
+        const ngay_gui=document.getElementById("date").value+" "+document.getElementById("time").value;
+        const ghiChu=document.getElementsByName("ghiChu").value;
+        if(!(checkDate instanceof Date && !isNaN(checkDate)))
+        {
+          alert("Please enter proper date");
+          return;
+        }
+        
+        if(document.getElementById("time").value.trim()=="")
+        {
+          alert("Please enter proper time");
+          return;
+        }
+        if(checkDate.getTime()<=curDate.getTime())
+        {
+          alert("Please enter date and time that is more than 1 day away from current date!");
+          return;
+        }
+        if(checkDate.getTime()>=maxDate.getTime())
+        {
+          alert("Please enter date and time that is less than 1 year away from current date!");
+          return;
+        }
+        axios.post('/borrow',
+        {
+          sach: params.id,
+          co_so: co_so,
+          ngay_gui: ngay_gui,
+          ghi_chu:ghiChu,
+      }
+      ).then(function(response)
+      {
+          if(response.data.errMes) 
+          {
+            alert(response.data.errMes);
+            window.location.reload();
+          }
+          else
+          {
+              window.location.reload();
+              alert("Request received, please wait for our response!")
+          }
+      }); 
+      }
+
+    </script>
+</html>

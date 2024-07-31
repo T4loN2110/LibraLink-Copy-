@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+        <%include ./include/nav %>
+        <div class="container">
+            <div class="row">
+                <% include ./include/sidemenu_librarian %>
+                <div class="col-10 col-lg-9" >
+                    <div class="row" style="padding-top: 5%;">
+                    <div class="col-10">
+                        <div class="title text personaltitle margin-left:5%">Personal Profile</div>
+                    </div>
+                    <div class="w-100"></div>
+                    <form action="/account/updateProfile" method="post">
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputUsername" class="form-label">Username</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="<%=acc.username %>" name="inputUsername">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputUsername" class="form-label">Role</label>
+                            </div>
+                            <% console.log(acc.role)
+                            if (acc.role == 1) { %>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="Member" name="inputRole" readonly>
+                            </div>
+                            <% } else if (acc.role = 2) { %>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="Librarian" name="inputRole" readonly>
+                            </div>
+                            <% } else if (acc.role == 3) { %>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="Admin" name="inputRole" readonly>
+                            </div>
+                            <% } %>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputName" class="form-label">Name</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="<%=acc.name %>" name="inputName">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputGender" class="form-label">Gender</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="<%=acc.gender %>" name="inputGender">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputPhone" class="form-label">Phone</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="<%=acc.phone %>" name="inputPhone">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputAddress" class="form-label">Address</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="form-control" value="<%=acc.address %>" name="inputAddress">
+                            </div>
+                        </div>
+                        <div class="col-2" style="margin: 2% 0% 3% 2%">
+                            <button class="btn btn-primary" type="submit" >Update Profile</button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputPassword" class="form-label">Current Password</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="password" class="form-control" id="inputPassword">
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 5%">
+                            <div class="col-2">
+                                <label for="inputNewPassword" class="form-label">New Password</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="password" class="form-control" id="inputNewPassword">
+                            </div>
+                        </div>
+                        <div class="col-2" style="margin: 2% 0% 3% 2%">
+                            <button type="button" class="btn btn-primary" onclick="return changePassword()">Change Password</button>
+                        </div>
+                    <div>
+                </div>
+            </div>
+            <%include ./include/scripts %>
+            <script>
+                function changePassword() {
+                    const currentPassword = document.getElementById("inputPassword").value;
+                    const newPassword = document.getElementById("inputNewPassword").value;
+                    if (currentPassword == newPassword) {
+                        alert("Current password and new password cannot be the same");
+                        return false;
+                    }
+                    axios.post('/account/updatePassword', 
+                    {
+                        password: currentPassword,
+                        newPassword: newPassword
+                    }
+                    ).then(function(response)
+                    {
+                        if(response.data.errMes) {alert(response.data.errMes)}
+                        else
+                        {
+                            window.location.reload();
+                            alert("Changed password successfully!")
+                        }
+                    }); 
+                }
+
+            </script>
+            </div>
+        </div>
+        </div>
+        </div>
+        <%include ./include/footer %>
+    </body>
+</html>
+

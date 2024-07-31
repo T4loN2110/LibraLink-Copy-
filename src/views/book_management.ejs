@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%include ./include/head %>
+    <body>
+        <%include ./include/nav %>
+            <div class="container">
+            <div class="row">
+                <% include ./include/sidemenu_librarian %>
+                <div class="col-10 col-lg-9">
+                    <div class="text personaltitle" style="padding-left: 5%; padding-top: 5%;">
+                        <div class="row">
+                            <div class="col-10">
+                                All Books 
+                            </div>
+                            <div class="col-2">
+                                <a href="create" class="btn btn-primary">Add New Book</a>
+                            </div>
+                        </div>
+                    </div>
+                        
+
+                        <div class="horizontal_line" style="margin-top: 3%;"></div>
+                        <p>&nbsp;</p> 
+                        
+                    <div class="row">
+
+                        <table class="table-responsive table-bordered" id="BookTable" name="BookTable" style="margin-top: 2%; margin-left: 1%">
+                            <tr class="header_cell">
+                                <th>No.</th>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Publish Year</th>
+                                <th>Author</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
+                            </tr>
+                            <% if (book.length) { %>
+                                <% for (var i = 0; i < book.length; i++) { %>
+                                    <% var total = 0; %>
+                                    <% for (var j = 0; j < book[i].co_so.length; j++) { %>
+                                        <% total += book[i].co_so[j].so_luong; %>
+                                    <% } %>
+                                    <tr>
+                                        <th><%= i + 1 %></th>
+                                        <th><%= book[i].isbn %></th>
+                                        <th><%= book[i].ten %></th>
+                                        <th><%= book[i].nam_xb %></th>
+                                        <th><%= book[i].tac_gia %></th>
+                                        <th><a href="#department_modal<%= i %>" data-bs-toggle="modal" style="display: flex; align-items: center"><%=total%></a></th>
+                                        <th>
+                                          <a href="/book/create?id=<%= book[i]._id %>" class="btn btn-primary">Edit</a>
+                                        </th>
+                                    </tr>
+                                <% } %>
+                            <% } %>
+                        </table>
+                        <p>&nbsp;</p> 
+                    </div>
+                    <div class="row">
+                        <% if(pages > 0) { %>
+                            <nav class="mx-auto">
+                              <ul class="pagination" style="margin-top: 2rem;">
+                              
+                                <% if(current == 1) { %> 
+        
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="1">First</a>
+                                    </li>
+                                <% } else { %>
+        
+                                    <li class="page-item">
+                                      <a class="page-link" href="1">First</a>
+                                    </li>
+                                <% } %>
+                                
+                                <% var i = (Number(current) > 3 ? Number(current) - 2 : 1) %> 
+        
+                                <% if(i !== 1) { %>
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="#">...</a>
+                                    </li>
+                                <% } %>
+                                <% for(; i <= (Number(current) + 2) && i <= pages; i++) { %>
+                                
+                                  <% if(i == current) { %>
+                                    <li class="page-item active">
+                                      <% var link=i%>
+                                      <a class="page-link" href=<%=link%> >
+                                        <%= i %>
+                                      </a>
+                                    </li>
+                                <% } else { %>
+                                    <li class="page-item">
+                                      <% var link=i%>
+                                      <a class="page-link" href=<%=link%> >
+                                        <%= i %>
+                                      </a>
+                                    </li>
+                                <% } %>
+                                <% if (i == Number(current) + 2 && i < pages) { %>
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="#">...</a>
+                                    </li>
+                                <% } %>
+                                <% } %>
+                                
+                                <!-- LAST ITEM -->
+                                <% if(current == pages) { %> 
+        
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="#">
+                                        Last
+                                      </a>
+                                    </li>
+                                <% } else { %>
+                                
+                                    <li class="page-item">
+                                      <% var link=pages%>
+                                      <a class="page-link" href=<%=link%> >
+                                        Last
+                                      </a>
+                                    </li>
+                                <% } %>
+                              </ul>
+                            </nav>
+                            <% } %>
+                    </div>    
+                </div>
+            </div>
+        <% include ./include/scripts %>
+        <% include ./include/footer %>
+        <% if(book.length) {
+          for (let i = 0; i < book.length; i++) {%>
+          <div class="modal fade" id="department_modal<%= i %>" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Departments</h5>
+                      </div>
+                      <div class="modal-body">
+                          <div class="container-fluid">
+                              <div class="col-5">
+                                  <h5 class="text-start">Book</h5>
+                              </div>
+                              <div class="col-5">
+                                  <p class="text-start"><%=book[i].ten%></p>
+                              </div>
+                              <div class="row">
+                                  <table class="table-responsive" style="border-collapse: collapse; text-align: center; border: 1px solid black" id="invoice_detail_table">
+                                      <tr class="header_cell">
+                                          <th>No.</th>
+                                          <th>Address</th>
+                                          <th>Quantity</th>
+                                      </tr>
+                                      <% if(book[i].co_so.length){
+                                          for(var j = 0; j< book[i].co_so.length; j++) { %>
+                                              <tr>
+                                                  <th><%= j + 1%></th>
+                                                  <th><%= book[i].co_so[j].dia_chi%></th>
+                                                  <th><%= book[i].co_so[j].so_luong%></tr>
+                                              </tr>
+                                      <% }} %>
+                                  </table>
+                              </div>
+                              <p>&nbsp;</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <% }} %>
+    </body>
+</html>

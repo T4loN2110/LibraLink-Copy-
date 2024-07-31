@@ -1,0 +1,33 @@
+{
+  "name": "code",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "bootstrap": "^5.3.1",
+    "connect-mongo": "^5.0.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.3.1",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.17.3",
+    "FormData": "^0.10.1",
+    "http-errors": "~1.6.3",
+    "jquery": "^3.7.0",
+    "method-override": "^3.0.0",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.1",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

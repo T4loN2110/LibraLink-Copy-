@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include ./include/head %>
+    <body>
+        <% include ./include/nav %>
+        <div class="container">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="bullshit_book_quote.webp" class="d-block w-100" style="width: auto;" alt="s1">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="bullshit_book_quote_2.jpg" class="d-block w-100" style="width: auto;" alt="s2">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="bullshit_book_quote_3.jpg" class="d-block w-100" style="width: auto;" alt="s2">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="bullshit_book_quote_4.jpg" class="d-block w-100" style="width: auto;" alt="s2">
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <hr>
+            <div class="container text-center my-3">
+                <div class="row mx-auto my-auto justify-content-center">
+                    <div id="recipeCarousel" class="carousel slide somebook" data-bs-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[0]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[0].anh_bia.contentType%>;base64,<%=book[0].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                            <div class="carousel-item" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[1]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[1].anh_bia.contentType%>;base64,<%=book[1].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                            <div class="carousel-item" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[2]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[2].anh_bia.contentType%>;base64,<%=book[2].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                            <div class="carousel-item" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[3]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[3].anh_bia.contentType%>;base64,<%=book[3].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                            <div class="carousel-item" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[4]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[4].anh_bia.contentType%>;base64,<%=book[4].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                            <div class="carousel-item" id="book">
+                                <div class="col-md-3">
+                                    <a href="/borrow/?id=<%=book[5]._id%>" class="card">
+                                        <div class="card-img" style="padding: 5%">
+                                            <img src="data:image/<%=book[5].anh_bia.contentType%>;base64,<%=book[5].anh_bia.data.toString('base64')%>" class="img-fluid"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>  
+                        </div>
+                        <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>		
+            </div>
+            <hr>
+            <h3>What is LibraLink?</h3>
+                <div><h5>Libralink is our online library management system.</h5></div>
+                <div><h5>You can find books, borrow books online, and see your past activities on our system here.</h5></div>
+            <hr>
+            <h3>Regulation on borrowing and return books</h3>
+                <div><h5>Borrowed books must be returned in at most 7 days.</h5></div>
+                <div><h5>Return deadline may be extended for at most 7 days.</h5></div>
+                <div><h5>Only accept in work hours (7:00 - 18:00).</h5></div>
+                <div><h5>Overdue fee is 20.000 vnd.</h5></div>
+                <div><h5>Any damage to any of the library's books must be compensated according to its value.</h5></div>
+            <hr>
+            
+        </div>
+        <% include ./include/scripts %>
+        <% include ./include/footer %>
+    </body>
+    <script>
+        let items = document.querySelectorAll('.carousel #book')
+
+        items.forEach((el) => {
+            const minPerSlide = 4
+            let next = el.nextElementSibling
+            for (var i=1; i<minPerSlide; i++) {
+                if (!next) {
+            // wrap carousel by using first child
+            next = items[0]
+        }
+        let cloneChild = next.cloneNode(true)
+        el.appendChild(cloneChild.children[0])
+        next = next.nextElementSibling
+    }
+    })
+    </script>
+</html>

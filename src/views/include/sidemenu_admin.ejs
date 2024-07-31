@@ -1,0 +1,60 @@
+<div class="col-auto col-md-4 col-xl-3 px-sm-3 px-0 colorgray">
+    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-black min-vh-100">
+        <div class="row" style="margin-top: 15%;">
+            <div class="col-3">
+                <img src="default_profile_avatar.png" style="padding-left: 1%; padding-top: 5%; max-width: 50px; max-height: 50px;">
+            </div>   
+            <div class="col-8" style="margin: 5%">
+                <div class="col-8" style="margin-left: 7%;margin-bottom: 3%;">
+                    <div class="text sidemenubig" style="padding-left: 2%;"><%=user.username%></div>
+                    <%rolename=""
+                    if (user.role==1){
+                        rolename="Member"
+                    }
+                    else if (user.role==2){
+                        rolename="Librarian"
+                    }
+                    else {
+                        rolename="Admin"
+                    }%>
+                    <div class="text sidemenusmall" style="padding-left: 2%;"><%=rolename%></div>
+                    
+                </div>
+            </div>
+        </div>    
+        <div class="horizontal_line" style="margin-top: 5%; padding-right: 95%;"></div>    
+
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start sidemenusmall" id="menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link align-middle px-0">
+                    <i class="fs-4 bi-house "></i> <span class="ms-1 d-none d-sm-inline">Personal Profile</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/notification/notifs" class="nav-link align-middle px-0">
+                    <i class="fs-4 bi-house "></i> <span class="ms-1 d-none d-sm-inline">Notification</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/finance/detail/1" class="nav-link align-middle px-0">
+                    <i class="fs-4 bi-house "></i> <span class="ms-1 d-none d-sm-inline">Finance</span>
+                </a>
+            </li>
+            <li>
+                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                    <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">User Management</span>
+                </a>
+                <ul class="collapse show nav ms-0 collapsebg" id="submenu1" data-bs-parent="#menu">
+                    <li class="w-100">
+                        <a href="/account/addEditUserPage" class="nav-link px-0 ms-4"> <span class="d-none d-sm-inline">Add & Edit User</span></a>
+                    </li>
+                    <li>
+                        <a href="/account/1" class="nav-link px-0 ms-4"> <span class="d-none d-sm-inline">All Users</span></a>
+                    </li>
+                </ul>
+            </li>
+                                
+        </ul>
+        
+    </div>
+</div>
